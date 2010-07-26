@@ -174,7 +174,7 @@ Vector of strings. Default: []
 
 ## Installation
 
-Add the following :dev-dependency to your project.clj:
+Add the following to your project.clj :dev-dependencies:
 
 `[lein-js "0.1-SNAPSHOT"]`
 
