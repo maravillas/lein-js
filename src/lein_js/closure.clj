@@ -2,13 +2,10 @@
   (:import [com.google.javascript.jscomp CompilerOptions JSSourceFile
 	    CompilationLevel WarningLevel ClosureCodingConvention
 	    DiagnosticGroups CheckLevel DefaultCodingConvention]
-	   [com.google.common.base Charsets])
+	   [java.nio.charset Charset])
   (:use [clojure.contrib.string :only [lower-case]]
 	[clojure.contrib.io :only [file]])
   (:require [clojure.contrib.duck-streams :as duck-streams]))
-
-;; TODO
-;; Make charset configurable
 
 (def default-options
      {:compilation-level :simple-optimizations
@@ -23,7 +20,8 @@
       :pretty-print false
       :print-input-delimiter false
       :process-closure-primitives false
-      :manage-closure-deps false})
+      :manage-closure-deps false
+      :charset "UTF-8"})
 
 (def compilation-levels
      {:whitespace-only CompilationLevel/WHITESPACE_ONLY
@@ -86,9 +84,11 @@
 
 (defn run
   [inputs output options]
-  (let [inputs (map #(JSSourceFile/fromFile % Charsets/UTF_8) inputs)
-	externs (map #(JSSourceFile/fromFile % Charsets/UTF_8) (:externs options))
+  (let [options (merge default-options options)
 	compiler-options (make-compiler-options options output)
+	charset (Charset/forName (:charset options))
+	inputs (map #(JSSourceFile/fromFile % charset) inputs)
+	externs (map #(JSSourceFile/fromFile % charset) (:externs options))
 	compiler (com.google.javascript.jscomp.Compiler. System/err)]
     (com.google.javascript.jscomp.Compiler/setLoggingLevel java.util.logging.Level/WARNING)
     (doto compiler

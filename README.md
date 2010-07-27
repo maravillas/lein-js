@@ -172,6 +172,12 @@ The files containing extern declarations. See [Externs](http://code.google.com/c
 
 Vector of strings. Default: []
 
+**:charset**
+
+The character set of the input files. See [java.nio.charset.Charset](http://java.sun.com/javase/6/docs/api/java/nio/charset/Charset.html) for options.
+
+String. Default: "UTF-8"
+
 ## Installation
 
 Add the following to your project.clj :dev-dependencies:
