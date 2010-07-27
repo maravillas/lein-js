@@ -178,7 +178,7 @@ Add the following to your project.clj :dev-dependencies:
 
 `[lein-js "0.1-SNAPSHOT"]`
 
-You'll also need to obtain the Closure Compiler jar from http://code.google.com/p/closure-compiler/. and place it in your dev-dependencies folder. This jar is not yet available on a Maven repo (see http://code.google.com/p/closure-compiler/issues/detail?id=37); I may push it to Clojars, but doing so seems like an abuse.
+You'll also need to obtain the [Closure Compiler](http://code.google.com/p/closure-compiler) jar and place it in your dev-dependencies folder. This jar is [not yet available](http://code.google.com/p/closure-compiler/issues/detail?id=37) on a Maven repo; I may push it to Clojars, but doing so seems like an abuse.
 
 ## License
 
