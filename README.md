@@ -184,6 +184,8 @@ Add the following to your project.clj :dev-dependencies:
 
 `[lein-js "0.1.0-SNAPSHOT"]`
 
+Download the plugin with `lein deps`.
+
 ## License
 
 Copyright (c) 2010 Matthew Maravillas
