@@ -33,6 +33,10 @@
       :default WarningLevel/DEFAULT
       :verbose WarningLevel/VERBOSE})
 
+(def coding-conventions
+     {:default DefaultCodingConvention
+      :closure ClosureCodingConvention})
+
 (def summary-details
      {:never-print 0
       :print-on-errors 1
@@ -41,43 +45,56 @@
 
 (def diagnostic-groups (seq (.getFields DiagnosticGroups)))
 
-(defn- filter-fields
+(defn filter-fields
   [group-names]
   (let [name-set (set group-names)]
     (filter #(name-set (.getName %)) diagnostic-groups)))
 
-(defn- set-warning-level
+(defn set-compilation-level
+  [compiler-options level]
+  (.setOptionsForCompilationLevel level compiler-options))
+
+(defn set-warning-level
+  [compiler-options level]
+  (.setOptionsForWarningLevel level compiler-options))
+
+(defn set-diagnostic
   [compiler-options groups level]
   (doseq [field (filter-fields groups)]
     (.setWarningLevel compiler-options (.get field nil) level)))
 
+(defn set-compiler-option-fields
+  [compiler-options user-options output]
+  (doto compiler-options
+    (.setCodingConvention (.newInstance ((:coding-convention user-options) coding-conventions)))
+    (.setSummaryDetailLevel ((:summary-detail user-options) summary-details))
+    (.setManageClosureDependencies (boolean (:manage-closure-deps user-options))))
+  
+  ;; CompilerOptions has no setters defined for these fields
+  (set! (. compiler-options prettyPrint) (:pretty-print user-options))
+  (set! (. compiler-options printInputDelimiter) (:print-input-delimiter user-options))
+  (set! (. compiler-options closurePass) (:process-closure-primitives user-options))
+  (set! (. compiler-options jsOutputFile) output))
+
 ;; See DiagnosticGroups.setWarningLevels
-(defn- set-diagnostics
+(defn set-diagnostics
   [compiler-options options]
-  (set-warning-level compiler-options (:compilation-errors options) CheckLevel/ERROR)
-  (set-warning-level compiler-options (:compilation-warnings options) CheckLevel/WARNING)
-  (set-warning-level compiler-options (:compilation-ignored options) CheckLevel/OFF))
+  (doto compiler-options
+      (set-diagnostic (:compilation-errors options) CheckLevel/ERROR)
+      (set-diagnostic (:compilation-warnings options) CheckLevel/WARNING)
+      (set-diagnostic (:compilation-ignored options) CheckLevel/OFF)))
 
-(defn- make-compiler-options
+(defn make-compiler-options
   [options output]
-  (let [options (merge default-options options)
+  (let [user-opts (merge default-options options)
 	compiler-opts (CompilerOptions.)]
-    (.setOptionsForCompilationLevel ((:compilation-level options) compilation-levels)
-				    compiler-opts)
-    (.setOptionsForWarningLevel ((:warning-level options) warning-levels) compiler-opts)
-    (set! (. compiler-opts prettyPrint) (:pretty-print options))
-    (set! (. compiler-opts printInputDelimiter) (:print-input-delimiter options))
-    (set! (. compiler-opts closurePass) (:process-closure-primitives options))
-    (set! (. compiler-opts jsOutputFile) output)
-    (set-diagnostics compiler-opts options)
     (doto compiler-opts
-      (.setCodingConvention (if (= (:coding-convention options) :closure)
-			      (ClosureCodingConvention.)
-			      (DefaultCodingConvention.)))
-      (.setSummaryDetailLevel ((:summary-detail options) summary-details))
-      (.setManageClosureDependencies (boolean (:manage-closure-deps options))))))
+	(set-compilation-level ((:compilation-level user-opts) compilation-levels))
+	(set-warning-level ((:warning-level user-opts) warning-levels))
+	(set-compiler-option-fields user-opts output)
+	(set-diagnostics user-opts))))
 
-(defn- write-output
+(defn write-output
   [compiler output]
   (println "Writing result to" (.getAbsolutePath output))
   (duck-streams/spit output (.toSource compiler)))
