@@ -78,21 +78,21 @@
 
 ;; See DiagnosticGroups.setWarningLevels
 (defn set-diagnostics
-  [compiler-options options]
+  [compiler-options user-options]
   (doto compiler-options
-      (set-diagnostic (:compilation-errors options) CheckLevel/ERROR)
-      (set-diagnostic (:compilation-warnings options) CheckLevel/WARNING)
-      (set-diagnostic (:compilation-ignored options) CheckLevel/OFF)))
+      (set-diagnostic (:compilation-errors user-options) CheckLevel/ERROR)
+      (set-diagnostic (:compilation-warnings user-options) CheckLevel/WARNING)
+      (set-diagnostic (:compilation-ignored user-options) CheckLevel/OFF)))
 
 (defn make-compiler-options
   [options output]
-  (let [user-opts (merge default-options options)
-	compiler-opts (CompilerOptions.)]
-    (doto compiler-opts
-	(set-compilation-level ((:compilation-level user-opts) compilation-levels))
-	(set-warning-level ((:warning-level user-opts) warning-levels))
-	(set-compiler-option-fields user-opts output)
-	(set-diagnostics user-opts))))
+  (let [user-options (merge default-options options)
+	compiler-options (CompilerOptions.)]
+    (doto compiler-options
+	(set-compilation-level ((:compilation-level user-options) compilation-levels))
+	(set-warning-level ((:warning-level user-options) warning-levels))
+	(set-compiler-option-fields user-options output)
+	(set-diagnostics user-options))))
 
 (defn write-output
   [compiler output]
