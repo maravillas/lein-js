@@ -1,8 +1,6 @@
 (defproject example "1.0.0-SNAPSHOT"
   :description "lein-js example project"
-  :dependencies [[org.clojure/clojure "1.2.0-beta1"]
-                 [org.clojure/clojure-contrib "1.2.0-beta1"]]
-  :dev-dependencies [[lein-js "0.1.0-SNAPSHOT"]]
+  :dev-dependencies [[lein-js "0.1.1-SNAPSHOT"]]
 
   ;; Many options are included with their default values, purely for illustration
   :js {:src "src/js"

@@ -182,7 +182,7 @@ String. Default: "UTF-8"
 
 Add the following to your project.clj :dev-dependencies:
 
-`[lein-js "0.1.0-SNAPSHOT"]`
+`[lein-js "0.1.1-SNAPSHOT"]`
 
 Download the plugin with `lein deps`.
 

@@ -1,4 +1,4 @@
-(defproject lein-js "0.1.0-SNAPSHOT"
+(defproject lein-js "0.1.1-SNAPSHOT"
   :description "A Leiningen plugin for concatenating and compiling JavaScript files using Google's Closure Compiler. "
   ;; Depends on the Google Closure Compiler, but it is not available on a Maven repo.
   ;; See http://code.google.com/p/closure-compiler/issues/detail?id=37
