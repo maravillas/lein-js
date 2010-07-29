@@ -1,6 +1,6 @@
 (ns leiningen.js
   (:import [java.io File])
-  (:use [clojure.java.io :only [file]])
+  (:use [clojure.java.io :only [file make-parents]])
   (:require [lein-js.closure :as closure]))
 
 (defn- add-path
@@ -27,6 +27,7 @@
 		       (if devel
 			 (:devel-options js-settings)
 			 (:prod-options js-settings)))]
+    (make-parents (file output-path))
     (println "Compiling" (apply str (interpose ", " inputs)) "...")
     (closure/run input-paths output-path options)))
 
