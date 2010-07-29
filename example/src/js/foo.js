@@ -1,0 +1,1 @@
+function foo() { alert("Greetings from foo!"); }

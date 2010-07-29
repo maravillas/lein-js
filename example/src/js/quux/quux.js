@@ -1,0 +1,1 @@
+function quux() { alert("Greetings from quux!"); }
