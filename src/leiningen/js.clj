@@ -36,6 +36,6 @@
      (js project "devel"))
   ([project action]
      (let [bundles (partition 2 (:bundles (:js project)))
-	   devel (= action "devel")]
+	   devel (not= action "prod")]
        (doseq [[output inputs] bundles]
 	 (compile-bundle inputs output project devel)))))
